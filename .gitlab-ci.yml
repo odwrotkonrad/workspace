@@ -1,0 +1,21 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+stages:
+  - validate
+
+##[>] 🤖🤖
+variables:
+  CI_IMAGE: registry.gitlab.com/konradodwrot/infra/ci-images/ci-linux:v0.0.1
+##[<] 🤖🤖
+
+.base:
+  image: $CI_IMAGE
+
+validate-pre-commit-all:
+  extends: .base
+  stage: validate
+  script:
+    - make run-repo-ci-precommit-all
+    - git diff --exit-code HEAD
