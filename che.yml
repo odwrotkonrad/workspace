@@ -1,15 +1,16 @@
 ##[>] 🤖🤖
 ontoRepo:
+  options: {mixinOnly: true}
   include:
-    repoTemplate:
+    renderTemplates:
       - files:
           - source: templates/1-env/local.env.example
             dest:
               - {path: .env, options: {writeType: mergeUpsert}}
-          - {source: templates/2-data/makefile-agents.md.repo.tpl, dest: [assets/data/makefile.agents.md]}
-          - {source: templates/2-data/repo-structure.md.repo.tpl, dest: [assets/data/repo-structure.md]}
-          - {source: templates/3-audience/README.md.repo.tpl, dest: [README.md]}
-          - source: templates/3-audience/AGENTS.md.repo.tpl
+          - {source: templates/2-data/makefile-agents.md.ontoRepo.tpl, dest: [assets/data/makefile.agents.md]}
+          - {source: templates/2-data/repo-structure.md.ontoRepo.tpl, dest: [assets/data/repo-structure.md]}
+          - {source: templates/3-audience/README.md.ontoRepo.tpl, dest: [README.md]}
+          - source: templates/3-audience/AGENTS.md.ontoRepo.tpl
             dest:
               - CLAUDE.md
               - {path: AGENTS.md, options: {renderReferencedFiles: true}}
