@@ -8,10 +8,10 @@ setopt errexit pipefail
 umask 002
 
 ##[>] 🤖🤖🤖
-#[why] all required, no defaults: token authenticates gitlab (CI sets it, clones over https);
-#   group + host dir come from .env or CI variables.
+#[why] token + group required: token authenticates gitlab (CI sets it, clones over https);
+#   group comes from .env or CI variables.
 typeset v
-for v in GITLAB_TOKEN GITLAB_GROUP HOST_DIR_GITLAB_GROUP; do
+for v in GITLAB_TOKEN GITLAB_GROUP; do
   if [[ -z ${(P)v-} ]] {
     print -r -- "clone: skip: $v unset"
     return 0
@@ -20,7 +20,8 @@ done
 
 typeset root=${WORKSPACE_DIR:-$HOME/projects/gitlab}
 typeset group=$GITLAB_GROUP
-typeset host_dir=$HOST_DIR_GITLAB_GROUP
+#[why] default mirrors the remote layout: the group's own path as the host dir
+typeset host_dir=${HOST_DIR_GITLAB_GROUP:-$GITLAB_GROUP}
 
 function sync_project {
   local ns=$1 branch=$2 url=$3
