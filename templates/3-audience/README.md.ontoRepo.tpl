@@ -2,9 +2,9 @@
 
 ## How It Works
 
-Two che profiles: `repo` (always eligible) renders this repo's own docs;
-`gitlabGroup` (eligible only when `GITLAB_GROUP` is set, via `onlyIf`) runs
-the `ci/zsh/scripts/bootstrap/*.zsh` scripts.
+Two che profiles: `ontoRepo` (autoExec) renders this repo's own docs;
+`gitlabGroup` (autoExec, eligible only when `GITLAB_GROUP` is set, via
+`execIf`) runs the `ci/zsh/scripts/bootstrap/*.zsh` scripts.
 `10-clone.zsh` clones/syncs every project of a gitlab group (`$GITLAB_GROUP`,
 required) into that group's host dir `$WORKSPACE_DIR/$HOST_DIR_GITLAB_GROUP`
 (required; `$WORKSPACE_DIR` defaults to `~/projects/gitlab`), then `20-index.zsh`
@@ -20,5 +20,5 @@ indexes by reference (no flattening).
 - `make render-templates` — regenerate this repo's own docs.
 - Set `GITLAB_GROUP`, `HOST_DIR_GITLAB_GROUP`, and `GITLAB_TOKEN` (and optionally
   `WORKSPACE_DIR`), then `che run-scripts` (setting `GITLAB_GROUP` makes the
-  profile eligible; `CHE_PROFILES_FORCE_ONE=gitlabGroup` forces it without) to
+  profile eligible; `che run-scripts --profile=gitlabGroup` forces it without) to
   clone + index.
