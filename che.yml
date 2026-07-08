@@ -1,6 +1,5 @@
 ##[>] 🤖🤖
 ontoRepo:
-  options: {mixinOnly: true}
   include:
     renderTemplates:
       - files:
@@ -16,7 +15,7 @@ ontoRepo:
               - {path: AGENTS.md, options: {renderReferencedFiles: true}}
 
 gitlabGroup:
-  options: {onlyIf: ['env:GITLAB_GROUP']}
+  options: {autoExec: true, execIf: ['env:GITLAB_GROUP']}
   include:
     runScripts:
       - ci/zsh/scripts/bootstrap/10-clone.zsh

@@ -2,9 +2,10 @@
 
 ## How It Works
 
-Two che profiles: `ontoRepo` (mixinOnly, run via `--profile=ontoRepo`) renders
-this repo's own docs; `gitlabGroup` (eligible only when `GITLAB_GROUP` is set,
-via `onlyIf`) runs the `ci/zsh/scripts/bootstrap/*.zsh` scripts.
+Two che profiles: `ontoRepo` (not autoExec, run via `--profile=ontoRepo`)
+renders this repo's own docs; `gitlabGroup` (autoExec, eligible only when
+`GITLAB_GROUP` is set, via `execIf`) runs the `ci/zsh/scripts/bootstrap/*.zsh`
+scripts.
 `10-clone.zsh` clones/syncs every project of a gitlab group (`$GITLAB_GROUP`,
 required) into that group's host dir `$WORKSPACE_DIR/$HOST_DIR_GITLAB_GROUP`
 (required; `$WORKSPACE_DIR` defaults to `~/projects/gitlab`), then `20-index.zsh`

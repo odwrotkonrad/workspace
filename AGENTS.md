@@ -27,7 +27,7 @@ Cloning many nested gitlab repos leaves no signal about what each subgroup holds
 ### Environment Variables:
 
 `WORKSPACE_DIR=path, default ~/projects/gitlab` root of the local gitlab workspace the bootstrap scripts clone into + index
-`GITLAB_GROUP=gitlab group path` gitlab group to clone (with subgroups); gates the gitlabGroup che profile (onlyIf), unset -> clone/index skip
+`GITLAB_GROUP=gitlab group path` gitlab group to clone (with subgroups); gates the gitlabGroup che profile (execIf), unset -> clone/index skip
 `HOST_DIR_GITLAB_GROUP=dir name` host dir under $WORKSPACE_DIR for that group's repos (replaces the remote group path segment), unset -> clone skips
 `GITLAB_TOKEN=gitlab api token` gitlab token for https clone (CI), unset -> clone skips
 
