@@ -15,7 +15,7 @@ export WORKSPACE_DIR
 #[what] gitlab group to clone (with subgroups); gates the gitlabGroup che profile (execIf), unset -> clone/index skip
 #[vals] gitlab group path
 export GITLAB_GROUP
-#[what] host dir under $WORKSPACE_DIR for that group's repos (replaces the remote group path segment), unset -> clone skips
+#[what] host dir under $WORKSPACE_DIR for that group's repos (replaces the remote group path segment), unset -> $GITLAB_GROUP
 #[vals] dir name
 export HOST_DIR_GITLAB_GROUP
 #[what] gitlab token for https clone (CI), unset -> clone skips
