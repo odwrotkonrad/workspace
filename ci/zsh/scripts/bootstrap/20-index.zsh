@@ -9,6 +9,12 @@ setopt errexit pipefail
 umask 002
 
 ##[>] 🤖🤖🤖
+#[why] environments without the render-files toolchain (image bakes, token-less CI) skip: the group clone was skipped there too
+if ! (( $+commands[render-repo-group-index] )) {
+  print -r -- "index: skip: render-repo-group-index not found"
+  return 0
+}
+
 typeset root=${WORKSPACE_DIR:-$HOME/projects/gitlab}
 #[what] scope the walk to the cloned group's host dir when set
 if [[ -n ${HOST_DIR_GITLAB_GROUP-} ]] root=${root}/${HOST_DIR_GITLAB_GROUP}
