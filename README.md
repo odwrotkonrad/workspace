@@ -16,8 +16,8 @@ Cloning many nested gitlab repos leaves no signal about what each subgroup holds
 - Recursive: each index is self-contained, child subgroups inlined below their parent.
 - Runs both locally (ssh) and in CI (https + `GITLAB_TOKEN`).## How It Works
 
-Two che profiles: `ontoRepo` (autoExec) renders this repo's own docs;
-`gitlabGroup` (autoExec, eligible only when `GITLAB_GROUP` is set, via
+Two che profiles: `ontoRepo` (autoDiscover) renders this repo's own docs;
+`gitlabGroup` (autoDiscover, eligible only when `GITLAB_GROUP` is set, via
 `execIf`) runs the `ci/zsh/scripts/bootstrap/*.zsh` scripts.
 `10-clone.zsh` clones/syncs every project of a gitlab group (`$GITLAB_GROUP`,
 required) into that group's host dir `$WORKSPACE_DIR/$HOST_DIR_GITLAB_GROUP`

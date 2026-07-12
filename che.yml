@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://gitlab.com/konradodwrot/go-modules/-/raw/main/che/assets/data/che.schema.json
 ##[>] 🤖🤖
 ontoRepo:
-  options: {autoExec: true}
+  options: {autoDiscover: true}
   include:
     renderTemplates:
       - files:
@@ -17,14 +17,14 @@ ontoRepo:
               - {path: AGENTS.md, options: {renderReferencedFiles: true}}
 
 gitlabGroup:
-  options: {autoExec: true, execIf: ['env:GITLAB_GROUP']}
+  options: {autoDiscover: true, execIf: ['env:GITLAB_GROUP']}
   include:
     runScripts:
       - ci/zsh/scripts/bootstrap/10-clone.zsh
       - ci/zsh/scripts/bootstrap/20-index.zsh
 
 claude-agents:
-  options: {autoExec: true, execIf: ['builtin:isVirt']}
+  options: {autoDiscover: true, execIf: ['builtin:isVirt']}
   include:
     renderTemplates:
       - ctx: {repo: Workspace}
