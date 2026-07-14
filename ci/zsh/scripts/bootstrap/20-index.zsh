@@ -9,11 +9,20 @@ setopt errexit pipefail
 umask 002
 
 ##[>] 🤖🤖🤖
-#[why] environments without the render-files toolchain (image bakes, token-less CI) skip: the group clone was skipped there too
+#[why] environments without the render-files toolchain (image bakes) skip
 if ! (( $+commands[render-repo-group-index] )) {
   print -r -- "index: skip: render-repo-group-index not found"
   return 0
 }
+
+#[why] gate on the same vars as 10-clone: no token/group -> the clone was skipped, so there is no group tree to index
+typeset v
+for v in GITLAB_TOKEN GITLAB_GROUP; do
+  if [[ -z ${(P)v-} ]] {
+    print -r -- "index: skip: $v unset"
+    return 0
+  }
+done
 
 typeset root=${WORKSPACE_DIR:-$HOME/projects/gitlab}
 #[what] scope the walk to the cloned group's host dir when set
