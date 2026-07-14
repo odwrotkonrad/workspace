@@ -17,7 +17,7 @@ ontoRepo:
               - {path: AGENTS.md, options: {renderReferencedFiles: true}}
 
 gitlabGroup:
-  options: {autoDiscover: true, execIf: ['env:GITLAB_GROUP']}
+  options: {autoDiscover: true, execIf: ['env:GITLAB_GROUP', 'env:GITLAB_TOKEN']}
   include:
     runScripts:
       - ci/zsh/scripts/bootstrap/10-clone.zsh
