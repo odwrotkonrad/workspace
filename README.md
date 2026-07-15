@@ -3,7 +3,7 @@
 
 ### What It Is
 
-Owns the local gitlab workspace at `$WORKSPACE_DIR` (default `~/projects/gitlab`): clones/syncs every project of a gitlab group (`$GITLAB_GROUP`, required) into that group's host dir `$WORKSPACE_DIR/$HOST_DIR_GITLAB_GROUP` (required), then generates a recursive **repo index** for each subgroup dir so agents and humans opening any subgroup see its directory structure, each repo's purpose inlined, child subgroups inlined recursively.
+Owns the local gitlab workspace at `$WORKSPACE_DIR` (default `~/projects/gitlab`): clones/syncs every project of one or more gitlab groups (`$GITLAB_GROUPS`, `<group>:<host_dir>` pairs; single-group `$GITLAB_GROUP`/`$HOST_DIR_GITLAB_GROUP` fallback) into each group's host dir under `$WORKSPACE_DIR`, then generates a recursive **repo index** for every subgroup dir from the workspace root down so agents and humans opening any subgroup see its directory structure, each repo's purpose inlined, child subgroups inlined recursively.
 
 ### Why It Exists
 

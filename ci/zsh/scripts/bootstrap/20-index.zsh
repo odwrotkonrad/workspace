@@ -1,7 +1,7 @@
 #!/bin/zsh
 #>[what]
-#   generate each subgroup's repo-index + rendered AGENTS.md/CLAUDE.md under
-#   $WORKSPACE_DIR/$HOST_DIR_GITLAB_GROUP (whole $WORKSPACE_DIR if the host dir is unset)
+#   generate each subgroup's repo-index + rendered AGENTS.md/CLAUDE.md for every
+#   subgroup dir under $WORKSPACE_DIR (the workspace root down through all groups)
 #/[what]
 
 emulate -LR zsh
@@ -15,18 +15,18 @@ if ! (( $+commands[render-repo-group-index] )) {
   return 0
 }
 
-#[why] gate on the same vars as 10-clone: no token/group -> the clone was skipped, so there is no group tree to index
-typeset v
-for v in GITLAB_TOKEN GITLAB_GROUP; do
-  if [[ -z ${(P)v-} ]] {
-    print -r -- "index: skip: $v unset"
-    return 0
-  }
-done
+#[why] gate on the same vars as 10-clone: no token/group -> the clone was skipped, so there is nothing on disk to index
+if [[ -z ${GITLAB_TOKEN-} ]] {
+  print -r -- "index: skip: GITLAB_TOKEN unset"
+  return 0
+}
+if [[ -z ${GITLAB_GROUPS-} && -z ${GITLAB_GROUP-} ]] {
+  print -r -- "index: skip: no group in GITLAB_GROUPS/GITLAB_GROUP"
+  return 0
+}
 
+#[what] walk the whole workspace root: the top index lists each group's host dir, then every subgroup below
 typeset root=${WORKSPACE_DIR:-$HOME/projects/gitlab}
-#[what] scope the walk to the cloned group's host dir when set
-if [[ -n ${HOST_DIR_GITLAB_GROUP-} ]] root=${root}/${HOST_DIR_GITLAB_GROUP}
 typeset repo_root=$(git -C ${0:A:h} rev-parse --show-toplevel)
 typeset tpl=${repo_root}/templates/3-audience/subgroup-index.md.ontoRepo.tpl
 

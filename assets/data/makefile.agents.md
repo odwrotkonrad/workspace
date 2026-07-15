@@ -4,8 +4,9 @@
 ### Environment Variables:
 
 `WORKSPACE_DIR=path, default ~/projects/gitlab` root of the local gitlab workspace the bootstrap scripts clone into + index
-`GITLAB_GROUP=gitlab group path` gitlab group to clone (with subgroups); gates the gitlabGroup che profile (execIf), unset -> clone/index skip
-`HOST_DIR_GITLAB_GROUP=dir name` host dir under $WORKSPACE_DIR for that group's repos (replaces the remote group path segment), unset -> $GITLAB_GROUP
+`GITLAB_GROUPS=group:host_dir;group:host_dir` groups to clone (with subgroups), ';'/newline-separated <group>:<host_dir> pairs (empty host_dir -> group path); gates the gitlabGroup che profile (execIf), unset -> fall back to GITLAB_GROUP
+`GITLAB_GROUP=gitlab group path` single-group fallback used only when GITLAB_GROUPS is unset: gitlab group to clone (with subgroups)
+`HOST_DIR_GITLAB_GROUP=dir name` single-group fallback host dir under $WORKSPACE_DIR (replaces the remote group path segment), unset -> $GITLAB_GROUP
 `GITLAB_TOKEN=gitlab api token` gitlab token for https clone (CI), unset -> clone skips
 
 ### Docs:

@@ -1,6 +1,6 @@
 #!/bin/zsh
 #>[what]
-#   clone/sync every $GITLAB_GROUP gitlab project into $WORKSPACE_DIR/$HOST_DIR_GITLAB_GROUP
+#   clone/sync every project of each $GITLAB_GROUPS group into $WORKSPACE_DIR/<host_dir>
 #/[what]
 
 emulate -LR zsh
@@ -8,20 +8,35 @@ setopt errexit pipefail
 umask 002
 
 ##[>] 🤖🤖🤖
-#[why] token + group required: token authenticates gitlab (CI sets it, clones over https);
-#   group comes from .env or CI variables.
-typeset v
-for v in GITLAB_TOKEN GITLAB_GROUP; do
-  if [[ -z ${(P)v-} ]] {
-    print -r -- "clone: skip: $v unset"
-    return 0
-  }
-done
+#[why] token required: authenticates gitlab (CI sets it, clones over https).
+if [[ -z ${GITLAB_TOKEN-} ]] {
+  print -r -- "clone: skip: GITLAB_TOKEN unset"
+  return 0
+}
+
+#[what] parse $GITLAB_GROUPS (';'/newline-separated <group>:<host_dir> pairs, empty host_dir -> group);
+#   fall back to the single $GITLAB_GROUP/$HOST_DIR_GITLAB_GROUP when unset.
+typeset -a groups
+if [[ -n ${GITLAB_GROUPS-} ]] {
+  typeset entry group host_dir
+  for entry in ${(s.;.)${GITLAB_GROUPS//$'\n'/;}}; do
+    entry=${entry## }; entry=${entry%% }
+    [[ -z $entry ]] && continue
+    group=${entry%%:*}
+    host_dir=${entry#*:}
+    [[ $host_dir == $entry || -z $host_dir ]] && host_dir=$group
+    groups+=("${group}:${host_dir}")
+  done
+} elif [[ -n ${GITLAB_GROUP-} ]] {
+  groups+=("${GITLAB_GROUP}:${HOST_DIR_GITLAB_GROUP:-$GITLAB_GROUP}")
+}
+
+if (( ! $#groups )) {
+  print -r -- "clone: skip: no group in GITLAB_GROUPS/GITLAB_GROUP"
+  return 0
+}
 
 typeset root=${WORKSPACE_DIR:-$HOME/projects/gitlab}
-typeset group=$GITLAB_GROUP
-#[why] default mirrors the remote layout: the group's own path as the host dir
-typeset host_dir=${HOST_DIR_GITLAB_GROUP:-$GITLAB_GROUP}
 
 function sync_project {
   local ns=$1 branch=$2 url=$3
@@ -69,13 +84,19 @@ function sync_project {
 typeset url_field=ssh_url_to_repo
 if (( ${+CI} )) url_field=http_url_to_repo
 
-glab api --paginate \
-  "groups/${group}/projects?include_subgroups=true&archived=false" \
-  | jq -r ".[] | [.path_with_namespace, .default_branch, .${url_field}] | @tsv" \
-  | while IFS=$'\t' read -r ns branch url; do
-      #[what] map remote path <group>/<subpath> to host dir <host_dir>/<subpath>
-      local rel=${host_dir}/${ns#${group}/}
-      if (( ${+CI} )) url=${url/#https:\/\//https://oauth2:${GITLAB_TOKEN}@}
-      if { ! sync_project $rel $branch $url } print -r -- "sync(fail): ${root}/${rel}"
-    done
+typeset pair group host_dir
+for pair in $groups; do
+  group=${pair%%:*}
+  host_dir=${pair#*:}
+
+  glab api --paginate \
+    "groups/${group}/projects?include_subgroups=true&archived=false" \
+    | jq -r ".[] | [.path_with_namespace, .default_branch, .${url_field}] | @tsv" \
+    | while IFS=$'\t' read -r ns branch url; do
+        #[what] map remote path <group>/<subpath> to host dir <host_dir>/<subpath>
+        local rel=${host_dir}/${ns#${group}/}
+        if (( ${+CI} )) url=${url/#https:\/\//https://oauth2:${GITLAB_TOKEN}@}
+        if { ! sync_project $rel $branch $url } print -r -- "sync(fail): ${root}/${rel}"
+      done
+done
 ##[<] 🤖🤖🤖
