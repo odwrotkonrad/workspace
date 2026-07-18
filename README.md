@@ -3,7 +3,7 @@
 
 ### What It Is
 
-Owns the local gitlab workspace at `$WORKSPACE_DIR` (default `~/projects/gitlab`): clones/syncs every project of one or more gitlab groups (`$GITLAB_GROUPS`, `<group>:<host_dir>` pairs; single-group `$GITLAB_GROUP`/`$HOST_DIR_GITLAB_GROUP` fallback) into each group's host dir under `$WORKSPACE_DIR`, then generates a recursive **repo index** for every subgroup dir from the workspace root down so agents and humans opening any subgroup see its directory structure, each repo's purpose inlined, child subgroups inlined recursively.
+Owns the local gitlab workspace at `$WORKSPACE_DIR` (default `~/projects/gitlab`): clones/syncs every project of one or more gitlab groups (`$GITLAB_GROUPS`, `<group>:<host_dir>` pairs; single-group `$GITLAB_GROUP`/`$HOST_DIR_GITLAB_GROUP` fallback) into each group's host dir under `$WORKSPACE_DIR`, then generates a recursive **repo index** for every subgroup dir from the workspace root down so agents and humans opening any subgroup see its directory structure, each repo's purpose inlined, child subgroups inlined recursively. Also carries a hand-written **parent Makefile** (`tree/projects/gitlab/konradodwrot/Makefile`, symlinked to the two shallower depths): che links it onto the cloned parent dirs (`~/projects`, `~/projects/gitlab`, `~/projects/gitlab/konradodwrot`) so a child-repo target runs from any parent, `make init-note` or `make <repo>-<target>` delegating to `make -C <repo-dir>` (real host only, `isVirt == false`).
 
 ### Why It Exists
 
