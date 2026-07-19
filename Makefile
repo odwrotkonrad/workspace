@@ -12,7 +12,7 @@ COMMANDS := render-templates repo-ci-prepare-hooks repo-ci-precommit-all
 #[what] root of the local gitlab workspace the bootstrap scripts clone into + index
 #[vals] path, default ~/projects/gitlab
 export WORKSPACE_DIR
-#[what] groups to clone (with subgroups), ';'/newline-separated <group>:<host_dir> pairs (empty host_dir -> group path); gates the gitlabGroup che profile (execIf), unset -> fall back to GITLAB_GROUP
+#[what] groups to clone (with subgroups), ';'/newline-separated <group>:<host_dir> pairs (empty host_dir -> group path); gates the gitlabGroup che profile (runIf), unset -> fall back to GITLAB_GROUP
 #[vals] group:host_dir;group:host_dir
 export GITLAB_GROUPS
 #[what] single-group fallback used only when GITLAB_GROUPS is unset: gitlab group to clone (with subgroups)
