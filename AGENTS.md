@@ -8,7 +8,7 @@ recursive per-subgroup repo index.
 
 ## What It Is
 
-Owns the local gitlab workspace at `$WORKSPACE_DIR` (default `~/projects/gitlab`): clones/syncs every project of one or more gitlab groups (`$GITLAB_GROUPS`, `<group>:<host_dir>` pairs; single-group `$GITLAB_GROUP`/`$HOST_DIR_GITLAB_GROUP` fallback) into each group's host dir under `$WORKSPACE_DIR`, then generates a recursive **repo index** for every subgroup dir from the workspace root down so agents and humans opening any subgroup see its directory structure, each repo's purpose inlined, child subgroups inlined recursively.
+Owns the local gitlab workspace at `$WORKSPACE_DIR` (default `~/projects/gitlab`): clones/syncs every project of one or more gitlab groups (`$GITLAB_GROUPS`, `<group>:<host_dir>` pairs; single-group `$GITLAB_GROUP`/`$HOST_DIR_GITLAB_GROUP` fallback) into each group's host dir under `$WORKSPACE_DIR`, then generates a recursive **repo index** for every subgroup dir from the workspace root down so agents and humans opening any subgroup see its directory structure, each repo's purpose inlined, child subgroups inlined recursively. Also carries a hand-written **parent Makefile** (`tree/projects/gitlab/konradodwrot/Makefile`, symlinked to the two shallower depths): che links it onto the cloned parent dirs (`~/projects`, `~/projects/gitlab`, `~/projects/gitlab/konradodwrot`) so a child-repo target runs from any parent, `make init-note` or `make <repo>-<target>` delegating to `make -C <repo-dir>` (real host only, `isVirt == false`).
 
 ## Why It Exists
 
@@ -27,7 +27,7 @@ Cloning many nested gitlab repos leaves no signal about what each subgroup holds
 ### Environment Variables:
 
 `WORKSPACE_DIR=path, default ~/projects/gitlab` root of the local gitlab workspace the bootstrap scripts clone into + index
-`GITLAB_GROUPS=group:host_dir;group:host_dir` groups to clone (with subgroups), ';'/newline-separated <group>:<host_dir> pairs (empty host_dir -> group path); gates the gitlabGroup che profile (execIf), unset -> fall back to GITLAB_GROUP
+`GITLAB_GROUPS=group:host_dir;group:host_dir` groups to clone (with subgroups), ';'/newline-separated <group>:<host_dir> pairs (empty host_dir -> group path); gates the gitlabGroup che profile (runIf), unset -> fall back to GITLAB_GROUP
 `GITLAB_GROUP=gitlab group path` single-group fallback used only when GITLAB_GROUPS is unset: gitlab group to clone (with subgroups)
 `HOST_DIR_GITLAB_GROUP=dir name` single-group fallback host dir under $WORKSPACE_DIR (replaces the remote group path segment), unset -> $GITLAB_GROUP
 `GITLAB_TOKEN=gitlab api token` gitlab token for https clone (CI), unset -> clone skips
@@ -55,3 +55,7 @@ templates
   1-env
   2-data
   3-audience
+tree
+  projects
+    gitlab
+      konradodwrot

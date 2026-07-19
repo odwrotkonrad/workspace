@@ -10,3 +10,7 @@ templates
   1-env
   2-data
   3-audience
+tree
+  projects
+    gitlab
+      konradodwrot
